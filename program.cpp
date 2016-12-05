@@ -5,8 +5,8 @@
 #include<iomanip>
 using namespace std;
 
-#define sectorSize 10
-#define sectors 24
+#define sectors 24		//��ƶ�ƶq 
+#define errorRate 16	//���~�o�ͪ����v��1/errorRate 
 
 void Print();
 
@@ -22,11 +22,10 @@ int count[sectors] = {};
 
 int main(){
 	srand (time(NULL));
-	int den = 10;
 	int total = 0;
 	for(int i = 0;i < sectors;i++){
 		for(int j = 0;j < sectorSize;j++){
-			if(rand() % den + 1 == 1){
+			if(!(rand() % errorRate)){
 				data[i][j] = 1;
 				++count[i];
 			}
@@ -40,11 +39,11 @@ int main(){
 }
 
 void Print(){
-	for(int j = 0;j < sectors;++j){
+	for(int i = 0;i < sectors;++i){
 		cout << "------------" << endl;
 		cout << "|";
-		for(int i = 0;i < sectorSize;++i){
-			if(data[j][i])
+		for(int j = 0;j < sectorSize;++j){
+			if(data[i][j])
 				SetColor(12*16);
 			else
 				SetColor(7*16);
