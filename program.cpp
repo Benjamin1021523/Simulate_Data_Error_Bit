@@ -1,11 +1,21 @@
 #include<iostream>
-#include<ctime> 
+#include<ctime>
 #include<vector>
 #include<cstdlib>//有的compiler不用include
+#include<iomanip>
 using namespace std;
+
 #define sectorSize 10
 #define sectors 24
-void omega(int range);
+
+void Print();
+
+#include<windows.h>
+void SetColor(int f=7){
+    unsigned short ForeColor=f;
+    HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
+    SetConsoleTextAttribute(hCon,ForeColor);
+}
 
 bool data[sectors][sectorSize] = {};
 int count[sectors] = {};
@@ -13,7 +23,7 @@ int count[sectors] = {};
 int main(){
 	srand (time(NULL));
 	int den = 10;
-	int a;
+	int total = 0;
 	for(int i = 0;i < sectors;i++){
 		for(int j = 0;j < sectorSize;j++){
 			if(rand() % den + 1 == 1){
@@ -21,26 +31,27 @@ int main(){
 				++count[i];
 			}
 		}
+		total += count[i];
 	}
 
-	omega(1);
-	omega(2);
-	omega(3);
-	omega(4);
+	Print();
+	cout << "Total error: " << total << endl;
+	cout << "error rate = " << fixed << setprecision(2) << (double)total / sectors * sectorSize << "%" << endl;
 }
 
-void omega(int range){
-	vector<int> result;
-	int temp = 0;
-	for(int i = 0;i < sectors;i++){
-		temp += count[i];
-		if((i + 1) % range == 0 || i + 1 == 24){
-			result.push_back(temp);
-			temp = 0;
+void Print(){
+	for(int j = 0;j < sectors;++j){
+		cout << "------------" << endl;
+		cout << "|";
+		for(int i = 0;i < sectorSize;++i){
+			if(data[j][i])
+				SetColor(12*16);
+			else
+				SetColor(7*16);
+			cout << " ";
+			SetColor();
 		}
+		cout << "|" << endl;
 	}
-	cout << endl;
-	for(int i = 0;i < result.size();i++)
-		cout << result[i] << " ";
-	cout << endl;
+	cout << "------------" << endl;
 }
