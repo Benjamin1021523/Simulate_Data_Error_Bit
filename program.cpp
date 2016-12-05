@@ -3,19 +3,15 @@
 #include<vector>
 #include<cstdlib>//有的compiler不用include
 #include<iomanip>
+#include<string>
 using namespace std;
+#define sectorSize 10	//資料塊大小
+#define sectors 24		//資料塊數量
+#define errorRate 16	//錯誤發生的機率為1/errorRate 
 
-#define sectors 24		//嚙踝蕭げ嚙複量 
-#define errorRate 16	//嚙踝蕭嚙羯嚙緻嚙談迎蕭嚙踝蕭嚙緞嚙踝蕭1/errorRate 
+void Print(int o);
 
-void Print();
-
-#include<windows.h>
-void SetColor(int f=7){
-    unsigned short ForeColor=f;
-    HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleTextAttribute(hCon,ForeColor);
-}
+#include"COLOR.cpp"
 
 bool data[sectors][sectorSize] = {};
 int count[sectors] = {};
@@ -33,14 +29,37 @@ int main(){
 		total += count[i];
 	}
 
-	Print();
+	Print(4);
 	cout << "Total error: " << total << endl;
 	cout << "error rate = " << fixed << setprecision(2) << (double)total / sectors * sectorSize << "%" << endl;
 }
 
-void Print(){
+void Print(int o){
+	string out;
+	out += "ω = ";
+	out += (o + 48);
+	cout << out << endl;
+	int check = 0;
+	int temp;
+	SetColor(14*16);
+	for(int i = 0;i < sectorSize + 2 + 2;++i)
+		cout << " ";
+	cout << endl;
+	SetColor();
 	for(int i = 0;i < sectors;++i){
-		cout << "------------" << endl;
+		
+		SetColor(14*16);
+		cout << " ";
+		SetColor();
+		for(int j = 0;j < sectorSize + 2;++j)
+			cout << "-";
+		SetColor(14*16);
+		cout << " ";
+		SetColor();
+		cout << endl;
+		SetColor(14*16);
+		cout << " ";
+		SetColor();
 		cout << "|";
 		for(int j = 0;j < sectorSize;++j){
 			if(data[i][j])
@@ -50,7 +69,43 @@ void Print(){
 			cout << " ";
 			SetColor();
 		}
-		cout << "|" << endl;
+		cout << "|";
+		SetColor(14*16);
+		cout << " ";
+		SetColor();
+		
+		if(check == i){
+			temp = 0;
+			for(int j = check;j < i + o;++j){
+				temp += count[j];
+			}
+			cout << "  This part has ";
+			if(temp > o)
+				SetColor(12);
+			cout << temp;
+			SetColor();
+			cout << " errors.";
+			check += o;
+		}
+		cout << endl;
+		if((i + 1) % o == 0){
+			SetColor(14*16);
+			cout << " ";
+			SetColor();
+			for(int j = 0;j < sectorSize + 2;++j)
+				cout << "-";
+			SetColor(14*16);
+			cout << " " << endl;
+			for(int j = 0;j < sectorSize + 2 + 2;++j)
+				cout << " ";
+			cout << endl;
+			SetColor();
+		}
 	}
-	cout << "------------" << endl;
+	
+	for(int i = 0;i < sectorSize + 2;++i)
+		cout << "-";
+	cout << endl;
+
 }
+
