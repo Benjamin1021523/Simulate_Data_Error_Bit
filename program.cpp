@@ -4,14 +4,12 @@
 #include<cstdlib>//有的compiler不用include
 #include<iomanip>
 #include<string>
-using namespace std;
-#define sectorSize 10	//資料塊大小
-#define sectors 24		//資料塊數量
-#define errorRate 16	//錯誤發生的機率為1/errorRate 
+using namespace std; 
 
 void Print(int o);
 
 #include"COLOR.cpp"
+#include"DEFINE.h"
 
 bool data[sectors][sectorSize] = {};
 int count[sectors] = {};
@@ -41,39 +39,37 @@ void Print(int o){
 	cout << out << endl;
 	int check = 0;
 	int temp;
-	SetColor(14*16);
-	for(int i = 0;i < sectorSize + 2 + 2;++i)
-		cout << " ";
-	cout << endl;
-	SetColor();
+	string edge, edgeB;
+	for(int i = 0;i < sectorSize;++i){
+		edge += "-";
+		edgeB += "=";
+	}
 	for(int i = 0;i < sectors;++i){
-		
-		SetColor(14*16);
-		cout << " ";
-		SetColor();
-		for(int j = 0;j < sectorSize + 2;++j)
-			cout << "-";
-		SetColor(14*16);
-		cout << " ";
-		SetColor();
-		cout << endl;
-		SetColor(14*16);
-		cout << " ";
-		SetColor();
+		SetColor(colorOfEdge*16);
+		cout << "=";
+		if(i % o == 0){
+			//SetColor(colorOfEdge*16);
+			cout << edgeB;
+		}
+		else{
+			SetColor();
+			cout << edge;
+		}
+		SetColor(colorOfEdge*16);
+		cout << "=" << endl;
 		cout << "|";
 		for(int j = 0;j < sectorSize;++j){
 			if(data[i][j])
-				SetColor(12*16);
+				SetColor(errorColor*16);
 			else
-				SetColor(7*16);
+				SetColor(normalColor*16);
 			cout << " ";
 			SetColor();
 		}
+		SetColor(colorOfEdge*16);
 		cout << "|";
-		SetColor(14*16);
-		cout << " ";
 		SetColor();
-		
+				
 		if(check == i){
 			temp = 0;
 			for(int j = check;j < i + o;++j){
@@ -81,31 +77,19 @@ void Print(int o){
 			}
 			cout << "  This part has ";
 			if(temp > o)
-				SetColor(12);
+				SetColor(errorColor);
 			cout << temp;
 			SetColor();
 			cout << " errors.";
 			check += o;
 		}
 		cout << endl;
-		if((i + 1) % o == 0){
-			SetColor(14*16);
-			cout << " ";
-			SetColor();
-			for(int j = 0;j < sectorSize + 2;++j)
-				cout << "-";
-			SetColor(14*16);
-			cout << " " << endl;
-			for(int j = 0;j < sectorSize + 2 + 2;++j)
-				cout << " ";
-			cout << endl;
-			SetColor();
-		}
 	}
+	SetColor(colorOfEdge*16);
+	cout << "=" << edgeB << "=" << endl;
+	SetColor();
 	
-	for(int i = 0;i < sectorSize + 2;++i)
-		cout << "-";
-	cout << endl;
+	cout << edge << endl;
 
 }
 
