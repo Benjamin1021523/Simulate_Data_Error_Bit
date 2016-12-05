@@ -1,6 +1,7 @@
 #include<iostream>
 #include<ctime> 
 #include<vector>
+#include<cstdlib>//有的compiler不用include
 using namespace std;
 #define sectorSize 10
 #define sectors 24
